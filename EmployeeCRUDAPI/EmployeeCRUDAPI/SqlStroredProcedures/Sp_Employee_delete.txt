@@ -1,0 +1,6 @@
+﻿CREATE PROCEDURE Sp_employee_delete
+@Id int
+as
+begin
+delete from Employees where Id = @Id
+end

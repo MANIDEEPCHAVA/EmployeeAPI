@@ -1,0 +1,15 @@
+﻿CREATE PROCEDURE [dbo].[Sp_employee_update]
+@Id int,
+@Name nvarchar(MAX),
+@Age int,
+@Salary decimal(18,2),
+@PhoneNumber bigint
+as
+begin
+update Employees set
+Name = @Name ,
+Age = @Age ,
+Salary = @Salary ,
+PhoneNumber = @PhoneNumber
+where Id = @Id
+end

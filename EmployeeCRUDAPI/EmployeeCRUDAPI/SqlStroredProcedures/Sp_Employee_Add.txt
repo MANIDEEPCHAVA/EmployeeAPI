@@ -1,0 +1,17 @@
+﻿CREATE PROCEDURE [dbo].[Sp_employee_Add]
+@Name nvarchar(MAX),
+@Age int,
+@Salary decimal(18,2),
+@PhoneNumber bigint,
+@Id int out
+as
+begin
+insert into Employees values(
+@Name ,
+@Age ,
+@Salary ,
+@PhoneNumber
+)
+set @Id=SCOPE_IDENTITY()
+return @Id
+end

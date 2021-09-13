@@ -1,0 +1,6 @@
+﻿CREATE PROCEDURE Sp_employee_id
+@Id int
+as
+begin
+select * from Employees where Id = @Id
+end

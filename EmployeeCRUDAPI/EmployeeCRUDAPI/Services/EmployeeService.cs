@@ -22,24 +22,25 @@ namespace EmployeeCRUDAPI.Services
         {
             List<Employee> employees = new List<Employee>();
 
-            SqlConnection con = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
-            SqlCommand com = new SqlCommand("Sp_employee_All", con);
-            com.CommandType = CommandType.StoredProcedure;
-            SqlDataAdapter da = new SqlDataAdapter(com);
-            DataTable dt = new DataTable();
-            da.Fill(dt);
-
-            for (int i = 0; i < dt.Rows.Count; i++)
+            using(SqlConnection con = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
             {
-                Employee employee = new Employee();
-                employee.Id = int.Parse(dt.Rows[i]["Id"].ToString());
-                employee.Name = dt.Rows[i]["Name"].ToString();
-                employee.Age = int.Parse(dt.Rows[i]["Age"].ToString());
-                employee.Salary = decimal.Parse(dt.Rows[i]["Salary"].ToString());
-                employee.PhoneNumber = long.Parse(dt.Rows[i]["PhoneNumber"].ToString());
-                employees.Add(employee);
+                con.Open();
+                SqlCommand com = new SqlCommand("Sp_employee_All", con);
+                com.CommandType = CommandType.StoredProcedure;
+                using (SqlDataReader da = com.ExecuteReader())
+                {
+                    while(da.Read())
+                    {
+                        Employee employee = new Employee();
+                        employee.Id = int.Parse(da["Id"].ToString());
+                        employee.Name = da["Name"].ToString();
+                        employee.Age = int.Parse(da["Age"].ToString());
+                        employee.Salary = decimal.Parse(da["Salary"].ToString());
+                        employee.PhoneNumber = long.Parse(da["PhoneNumber"].ToString());
+                        employees.Add(employee);
+                    }
+                }
             }
-
             return employees;
         }
         public Employee CreateEmployee(Employee emp)
@@ -61,7 +62,7 @@ namespace EmployeeCRUDAPI.Services
         }
         public Employee DeleteEmployee(int id)
         {
-            Employee employee = GetEmployeeById(id);
+            Employee emp = GetEmployeeById(id);
             SqlConnection con = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
             SqlCommand com = new SqlCommand("Sp_employee_delete", con);
             com.CommandType = CommandType.StoredProcedure;
@@ -70,7 +71,7 @@ namespace EmployeeCRUDAPI.Services
             com.ExecuteNonQuery();
             con.Close();
             con.Dispose();
-            return employee;
+            return emp;
         }
         public Employee UpdateEmployee(Employee emp)
         {
@@ -92,21 +93,26 @@ namespace EmployeeCRUDAPI.Services
 
         public Employee GetEmployeeById(int id)
         {
-            SqlConnection con = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
-            SqlCommand com = new SqlCommand("Sp_Employee_id", con);
-            com.CommandType = CommandType.StoredProcedure;
-            com.Parameters.AddWithValue("@Id", id);
-            SqlDataAdapter da = new SqlDataAdapter(com);
-            DataTable dt = new DataTable();
-            da.Fill(dt);
-            Employee employee = new Employee();
-            employee.Id = int.Parse(dt.Rows[0]["Id"].ToString());
-            employee.Name = dt.Rows[0]["Name"].ToString();
-            employee.Age = int.Parse(dt.Rows[0]["Age"].ToString());
-            employee.Salary = decimal.Parse(dt.Rows[0]["Salary"].ToString());
-            employee.PhoneNumber = long.Parse(dt.Rows[0]["PhoneNumber"].ToString());
-
-            return employee;
+            Employee emp = new Employee();
+            using (SqlConnection con = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+            {
+                con.Open();
+                SqlCommand com = new SqlCommand("Sp_Employee_id", con);
+                com.CommandType = CommandType.StoredProcedure;
+                com.Parameters.AddWithValue("@Id", id);
+                using (SqlDataReader da = com.ExecuteReader())
+                {
+                    while(da.Read())
+                    {
+                        emp.Id = int.Parse(da["Id"].ToString());
+                        emp.Name = da["Name"].ToString();
+                        emp.Age = int.Parse(da["Age"].ToString());
+                        emp.Salary = decimal.Parse(da["Salary"].ToString());
+                        emp.PhoneNumber = long.Parse(da["PhoneNumber"].ToString());
+                    }
+                }
+            }
+            return emp;
         }
     }
 }
