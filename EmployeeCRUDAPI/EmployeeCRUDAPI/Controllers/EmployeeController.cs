@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using EmployeeCRUDAPI.Models;
 
+
 namespace EmployeeCRUDAPI.Controllers
 {
     [Route("api/[controller]")]
@@ -13,7 +14,6 @@ namespace EmployeeCRUDAPI.Controllers
     public class EmployeeController : ControllerBase
     {
         private readonly IConfiguration _configuration;
-
         public EmployeeController(IConfiguration configuration)
         {
             _configuration = configuration;
@@ -23,7 +23,7 @@ namespace EmployeeCRUDAPI.Controllers
         [Route("GET")]
         public List<Employee> GetEmployees()
         {
-            return GetFromDB();
+              return GetFromDB();
         }
 
         [HttpGet]
@@ -91,7 +91,7 @@ namespace EmployeeCRUDAPI.Controllers
             List<Employee> employees = new List<Employee>();
 
             SqlConnection con = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
-            SqlCommand com = new SqlCommand("select * from Employees", con);
+            SqlCommand com = new SqlCommand("Sp_employee_All", con);
             SqlDataAdapter da = new SqlDataAdapter(com);
             DataTable dt = new DataTable();
             da.Fill(dt);
