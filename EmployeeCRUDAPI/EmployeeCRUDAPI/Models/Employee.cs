@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace EmployeeCRUDAPI.Models
 {
+
     public class Employee
     {
         public int Id { get; set; }
