@@ -1,5 +1,5 @@
 ﻿CREATE PROCEDURE [dbo].[Sp_employee_All]
 as
 begin
-select * from Employees
+select Id,Name,Age from Employees
 end

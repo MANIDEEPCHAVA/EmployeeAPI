@@ -35,8 +35,6 @@ namespace EmployeeCRUDAPI.Services
                         employee.Id = int.Parse(da["Id"].ToString());
                         employee.Name = da["Name"].ToString();
                         employee.Age = int.Parse(da["Age"].ToString());
-                        employee.Salary = decimal.Parse(da["Salary"].ToString());
-                        employee.PhoneNumber = long.Parse(da["PhoneNumber"].ToString());
                         employees.Add(employee);
                     }
                 }
